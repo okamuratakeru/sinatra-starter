@@ -13,3 +13,5 @@ gem 'rackup', '~> 2.3'
 group :development do
   gem 'rubocop-fjord', require: false
 end
+
+gem 'erb_lint', require: false
