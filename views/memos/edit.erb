@@ -1,0 +1,11 @@
+
+<% if @error %>
+  <p class="error"><%= @error %></p>
+<% end %>
+
+<form action="/memos/<%= @memo['id'] %>" method="post">
+  <input type="hidden" name="_method" value="patch">
+  <input type="text" name="title" value="<%= @memo['title'] %>" required>
+  <textarea name="description"><%= @memo['description'] %></textarea>
+  <button type="submit" class="btn">変更</button>
+</form>
