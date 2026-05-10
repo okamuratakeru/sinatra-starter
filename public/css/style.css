@@ -28,7 +28,7 @@ h2 {
 /* index: h1とボタンを横並び */
 .header-row {
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-end;
   align-items: center;
   margin-bottom: 16px;
 }
