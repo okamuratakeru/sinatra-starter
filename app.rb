@@ -18,14 +18,11 @@ class MemoApp < Sinatra::Base
   # セッションCookie設定
   use Rack::Session::Cookie,
       key: 'rack.session',
-      secret: SecureRandom.hex(32), # 署名用シークレット
-      httponly: true,    # JavaScriptからCookieを読めなくする
-      same_site: :strict # 他サイトからのリクエストでCookieを送らない
+      httponly: true # JavaScriptからCookieを読めなくする
 
   # 全リクエストにセキュリティヘッダーを付与
   before do
     headers['Content-Security-Policy'] = "default-src 'self'" # スクリプト等の読み込みを自サイトのみに制限
-    headers['X-Content-Type-Options']  = 'nosniff'            # MIMEタイプの推測を禁止
     headers['X-Frame-Options']         = 'DENY'               # iframe埋め込みを禁止（クリックジャッキング対策）
   end
 
