@@ -9,33 +9,33 @@ class Memo
 
   # 全メモを配列で返す
   def self.all
-    JSON.parse(File.read(DATA_PATH))
+    JSON.parse(File.read(DATA_PATH), symbolize_names: true)
   end
 
   # IDで1件取得
   def self.find(id)
-    all.find { |memo| memo['id'] == id }
+    all.find { |memo| memo[:id] == id }
   end
 
   # メモを追加
   def self.create(title, description)
     memos = all
-    memos << { 'id' => SecureRandom.uuid, 'title' => title, 'description' => description }
+    memos << { id: SecureRandom.uuid, title:, description: }
     save(memos)
   end
 
   # IDのメモを削除
   def self.destroy(id)
-    memos = all.reject { |memo| memo['id'] == id }
+    memos = all.reject { |memo| memo[:id] == id }
     save(memos)
   end
 
   # IDのメモを更新
   def self.update(id, title, description)
     memos = all
-    memo = memos.find { |m| m['id'] == id }
-    memo['title'] = title
-    memo['description'] = description
+    memo = memos.find { |m| m[:id] == id }
+    memo[:title] = title
+    memo[:description] = description
     save(memos)
   end
 
