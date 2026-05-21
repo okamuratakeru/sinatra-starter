@@ -2,14 +2,19 @@
 
 require 'sinatra/base'
 require 'sinatra/reloader'
-require 'json'
-require 'securerandom'
+require_relative 'config/database'
 require_relative 'models/memo'
 
 # # メモアプリのルーティングとリクエスト処理を担当する
 class MemoApp < Sinatra::Base
   configure :development do
     register Sinatra::Reloader
+  end
+
+  configure do
+    db = Database.connect
+    set :db, db
+    Memo.db = db
   end
 
   set :erb, escape_html: true
