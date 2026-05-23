@@ -13,7 +13,7 @@ class Memo
 
   # IDで1件取得
   def self.find(id)
-    db.exec_params('SELECT * FROM memos WHERE id = $1', [id]).first
+    db.exec_params('SELECT * FROM memos WHERE id = $1 LIMIT 1', [id]).first
   end
 
   # メモを追加
