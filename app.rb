@@ -60,7 +60,7 @@ class MemoApp < Sinatra::Base
 
   # 削除処理
   delete '/memos/:id' do
-    halt 404 unless Memo.find(params[:id])
+    halt 404 unless Memo.exists?(params[:id])
     Memo.destroy(params[:id])
     redirect '/'
   end
