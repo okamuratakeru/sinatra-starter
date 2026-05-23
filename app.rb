@@ -13,7 +13,6 @@ class MemoApp < Sinatra::Base
 
   configure do
     db = Database.connect
-    set :db, db
     Memo.db = db
   end
 
