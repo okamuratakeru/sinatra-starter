@@ -7,6 +7,7 @@ source 'https://rubygems.org'
 gem 'sinatra', '~> 4.2'
 gem 'sinatra-contrib'
 
+gem 'pg'
 gem 'puma', '~> 8.0'
 gem 'rackup', '~> 2.3'
 

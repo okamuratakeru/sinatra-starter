@@ -2,14 +2,18 @@
 
 require 'sinatra/base'
 require 'sinatra/reloader'
-require 'json'
-require 'securerandom'
+require_relative 'config/database'
 require_relative 'models/memo'
 
 # # メモアプリのルーティングとリクエスト処理を担当する
 class MemoApp < Sinatra::Base
   configure :development do
     register Sinatra::Reloader
+  end
+
+  configure do
+    db = Database.connect
+    Memo.db = db
   end
 
   set :erb, escape_html: true
@@ -56,7 +60,7 @@ class MemoApp < Sinatra::Base
 
   # 削除処理
   delete '/memos/:id' do
-    halt 404 unless Memo.find(params[:id])
+    halt 404 unless Memo.exists?(params[:id])
     Memo.destroy(params[:id])
     redirect '/'
   end

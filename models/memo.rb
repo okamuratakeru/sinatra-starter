@@ -1,52 +1,49 @@
 # frozen_string_literal: true
 
-require 'json'
-require 'securerandom'
-
 # メモデータのCRUD操作を担当するモデル
 class Memo
-  DATA_PATH = './data/memos.json'
+  class << self
+    attr_accessor :db
+  end
 
   # 全メモを配列で返す
   def self.all
-    JSON.parse(File.read(DATA_PATH), symbolize_names: true)
+    db.exec_params('SELECT id, title FROM memos ORDER BY created_at DESC').to_a
   end
 
   # IDで1件取得
   def self.find(id)
-    all.find { |memo| memo[:id] == id }
+    db.exec_params('SELECT id, title, description FROM memos WHERE id = $1 LIMIT 1', [id]).first
+  end
+
+  # IDのメモが存在するか確認
+  def self.exists?(id)
+    db.exec_params('SELECT 1 FROM memos WHERE id = $1 LIMIT 1', [id]).any?
   end
 
   # メモを追加
   def self.create(title, description)
-    memos = all
-    memos << { id: SecureRandom.uuid, title:, description: }
-    save(memos)
+    db.exec_params(
+      'INSERT INTO memos (title, description) VALUES ($1, $2) RETURNING id',
+      [title, description]
+    ).first
   end
 
   # IDのメモを削除
   def self.destroy(id)
-    memos = all.reject { |memo| memo[:id] == id }
-    save(memos)
+    db.exec_params('DELETE FROM memos WHERE id = $1', [id])
   end
 
   # IDのメモを更新
   def self.update(id, title, description)
-    memos = all
-    memo = memos.find { |m| m[:id] == id }
-    memo[:title] = title
-    memo[:description] = description
-    save(memos)
+    db.exec_params(
+      'UPDATE memos SET title = $1, description = $2, updated_at = NOW() WHERE id = $3',
+      [title, description, id]
+    )
   end
 
   # タイトルが空でないか検証
   def self.valid?(title)
     !title.nil? && !title.strip.empty?
   end
-
-  # JSONファイルに書き込む
-  def self.save(memos)
-    File.write(DATA_PATH, JSON.pretty_generate(memos))
-  end
-  private_class_method :save
 end
